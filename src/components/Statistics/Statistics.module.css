@@ -1,0 +1,20 @@
+.statisticsTitle {
+    font-size: 24px;
+    font-weight: 500;
+    margin-top: 48px;
+    color: #000;
+}
+
+.statisticsList {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    list-style: none;
+}
+
+.statisticsListItem {
+    font-size: 24px;
+    line-height: 0.75;
+}
