@@ -1,66 +1,66 @@
-// import Feedback from "components/Feedback/Feedback";
-import { Component } from "react";
+import { useState } from "react";
 import Statistics from "./Statistics/Statistics";
 import FeedbackOptions from "./FeedbackOptions/FeedbackOptions";
 import Section from "./Section/Section";
 import Notification from "./Notification/Notification";
 
-export class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0, 
-    bad: 0,
+export const App = () => {
+  const [goodFb, setGoodFb] = useState(0);
+  const [neutralFb, setNeutralFb] = useState(0);
+  const [badFb, setBadFb] = useState(0);
+
+  const handleClick = (option) => {
+    if(option === 'good') {
+      setGoodFb(goodFb + 1);
+    } else if(option === 'neutral') {
+      setNeutralFb(neutralFb + 1);
+    } else {
+      setBadFb(badFb + 1);
+    }
   }
 
-  handleClick = (option) => {
-    this.setState((prevState) => ({
-        [option]: prevState[option] + 1,
-    }))  
+  const countTotalFeedback = () => {
+    const totalFb = goodFb + badFb + neutralFb;
+    return totalFb;  
   }
 
-  countTotalFeedback = () => {
-    return this.state.good + this.state.neutral + this.state.bad;
+  const totalFeedback = Number(countTotalFeedback());
+
+  const countPositiveFeedbackPercentage = () => {
+    return totalFeedback > 0 ? (Math.round(goodFb / Number(totalFeedback) * 100)) : 0;
   }
 
-  countPositiveFeedbackPercentage = () => {
-    return this.countTotalFeedback() > 0 ? (Math.round(this.state.good / Number(this.countTotalFeedback()) * 100) + '%') : 0;
-  }
+  let posPerr = Number(countPositiveFeedbackPercentage());
 
-  render() {
-    const totalFeedback = this.countTotalFeedback();
-    return (
-      <div
-          style={{
-            height: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            fontSize: 40,
-            color: '#010101',
-            padding: '20px',
-          }}
-      >
-            <Section title='Please leave feedback'>
-                <FeedbackOptions options={['good', 'neutral', 'bad']} onLeaveFeedback={this.handleClick}/>
-            </Section>
+  return (
+    <div
+      style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 40,
+        color: '#010101',
+        padding: '20px',
+      }}
+    >
+      <Section title='Please leave feedback'>
+        <FeedbackOptions options={['good', 'neutral', 'bad']} onLeaveFeedback={handleClick}/>
+      </Section>
 
-            
-            {totalFeedback > 0 ? (
-                <Section title='Statistics'>
-                    <Statistics 
-                        good={this.state.good}
-                        neutral={this.state.neutral}
-                        bad={this.state.bad}
-                        total={this.countTotalFeedback()}
-                        positivePercentage={this.countPositiveFeedbackPercentage()}
-                    />
-                  </Section>
-                ) : (
-                  <Notification notif='There is no feedback yet...'/> 
-                )
-            }          
-      </div>
-    )
-  }
+      {totalFeedback > 0 ? (
+        <Section title='Statistics'>
+          <Statistics 
+            good={goodFb}
+            neutral={neutralFb}
+            bad={badFb}
+            total={totalFeedback}
+            positivePercentage={posPerr + '%'}
+          />
+          </Section>
+        ) : ( <Notification notif='There is no feedback yet...'/> )
+      }          
+    </div>
+  )
 };
